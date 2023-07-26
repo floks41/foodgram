@@ -60,7 +60,8 @@ class Command(BaseCommand):
         """Загрузка ингредиентов."""
 
         for row in DictReader(
-            f=open(f'{PATH}{INGREDIENT}', encoding=UTF), fieldnames=INGREDIENT_FIELDS
+            f=open(f'{PATH}{INGREDIENT}', encoding=UTF),
+            fieldnames=INGREDIENT_FIELDS,
         ):
             Ingredient.objects.get_or_create(**row)
         self.stdout.write(self.style.SUCCESS(f'{INGREDIENT} {MESSAGE}'))
@@ -92,19 +93,25 @@ class Command(BaseCommand):
         """Загрузка тегов рецептов."""
 
         for row in DictReader(f=open(f'{PATH}{RECIPE_TAGS}', encoding=UTF)):
-            Recipe.objects.get(id=row.get('recipe_id')).tags.add(row.get('tag_id'))
+            Recipe.objects.get(id=row.get('recipe_id')).tags.add(
+                row.get('tag_id')
+            )
         self.stdout.write(self.style.SUCCESS(f'{RECIPE_TAGS} {MESSAGE}'))
 
     def load_ingredient_in_recipe(self):
         """Загрузка ингредиентов рецептов."""
 
-        for row in DictReader(f=open(f'{PATH}{INGREDIENT_IN_RECIPE}', encoding=UTF)):
+        for row in DictReader(
+            f=open(f'{PATH}{INGREDIENT_IN_RECIPE}', encoding=UTF)
+        ):
             IngredientInRecipe.objects.get_or_create(
                 recipe=Recipe.objects.get(id=row.pop('recipe_id')),
                 ingredient=Ingredient.objects.get(id=row.pop('ingredient_id')),
                 **row,
             )
-        self.stdout.write(self.style.SUCCESS(f'{INGREDIENT_IN_RECIPE} {MESSAGE}'))
+        self.stdout.write(
+            self.style.SUCCESS(f'{INGREDIENT_IN_RECIPE} {MESSAGE}')
+        )
 
     def load_favorites(self):
         """Загрузка избранного."""
@@ -135,7 +142,9 @@ class Command(BaseCommand):
             recipe = Recipe.objects.get(id=id)
             recipe.image.save(file_name, image_file, save=True)
             self.stdout.write(
-                self.style.SUCCESS(f'{RECIPE_IMAGES_PATH}{file_name} {MESSAGE}')
+                self.style.SUCCESS(
+                    f'{RECIPE_IMAGES_PATH}{file_name} {MESSAGE}'
+                )
             )
 
     def handle(self, *args, **options):

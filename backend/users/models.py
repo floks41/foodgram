@@ -14,7 +14,8 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         help_text=_(
-            'Обязательное. Не более 150 символов. ' 'Буквы, цифры и только @/./+/-/_.'
+            'Обязательное. Не более 150 символов. '
+            'Буквы, цифры и только @/./+/-/_.'
         ),
         validators=[AbstractUser.username_validator],
         error_messages={

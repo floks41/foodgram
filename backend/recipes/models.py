@@ -34,7 +34,9 @@ class Tag(models.Model):
         max_length=200,
         unique=True,
         validators=[
-            RegexValidator(regex=r'^[-a-zA-Z0-9_]+$', message='Некорректный слаг')
+            RegexValidator(
+                regex=r'^[-a-zA-Z0-9_]+$', message='Некорректный слаг'
+            )
         ],
         error_messages={
             'unique': _('Тег с указанным slug уже существует.'),
@@ -57,7 +59,10 @@ class Ingredient(models.Model):
         verbose_name='Название', max_length=200, blank=False, null=False
     )
     measurement_unit = models.CharField(
-        verbose_name='Единица измерения', max_length=200, blank=False, null=False
+        verbose_name='Единица измерения',
+        max_length=200,
+        blank=False,
+        null=False,
     )
 
     def __str__(self) -> str:
@@ -89,11 +94,15 @@ class Recipe(models.Model):
         validators=[
             MinValueValidator(
                 limit_value=1,
-                message='Время приготовления не может быть меньше одной минуты',
+                message=(
+                    'Время приготовления не может быть меньше одной минуты'
+                ),
             )
         ],
     )
-    image = models.ImageField(upload_to='recipe/image/', null=True, default=None)
+    image = models.ImageField(
+        upload_to='recipe/image/', null=True, default=None
+    )
     author = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
@@ -150,7 +159,8 @@ class IngredientInRecipe(models.Model):
         null=False,
         validators=[
             MinValueValidator(
-                limit_value=1, message='Количество не может быть меньше одной единицы'
+                limit_value=1,
+                message='Количество не может быть меньше одной единицы',
             )
         ],
     )
@@ -170,7 +180,9 @@ class ShoppingCart(models.Model):
         to=User, on_delete=models.CASCADE, related_name='shopping_cart'
     )
     recipe = models.ForeignKey(
-        to=Recipe, on_delete=models.CASCADE, related_name='shopping_cart_recipes'
+        to=Recipe,
+        on_delete=models.CASCADE,
+        related_name='shopping_cart_recipes',
     )
 
     class Meta:
@@ -181,7 +193,8 @@ class ShoppingCart(models.Model):
         verbose_name_plural = 'Корзины для покупок'
         constraints = [
             models.UniqueConstraint(
-                fields=('user', 'recipe'), name='unique_recipe_in_user_shopping_cart'
+                fields=('user', 'recipe'),
+                name='unique_recipe_in_user_shopping_cart',
             )
         ]
 

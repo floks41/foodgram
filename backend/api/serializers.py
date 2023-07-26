@@ -114,7 +114,9 @@ class IngredientInRecipeCreateUpdateSerializer(serializers.ModelSerializer):
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     """Сериализатор рецепта для создания и обновления."""
 
-    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True
+    )
     image = Base64ImageField()
     ingredients = IngredientInRecipeCreateUpdateSerializer(many=True)
     author = DjoserUserSerializer(read_only=True)
@@ -125,7 +127,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         IngredientInRecipe.objects.bulk_create(
             [
                 IngredientInRecipe(
-                    ingredient=get_object_or_404(Ingredient, id=ingredient.get('id')),
+                    ingredient=get_object_or_404(
+                        Ingredient, id=ingredient.get('id')
+                    ),
                     recipe=recipe,
                     amount=ingredient.get('amount'),
                 )
@@ -133,7 +137,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             ]
         )
 
-    def set_ingredient_in_recipe_amount_for_update(self, ingredients_in_recipe, recipe):
+    def set_ingredient_in_recipe_amount_for_update(
+        self, ingredients_in_recipe, recipe
+    ):
         """Сохраняет значения для ингредиентов в рецепте при обновлении."""
 
         IngredientInRecipe.objects.bulk_create(
@@ -157,7 +163,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients', None)
         recipe = Recipe.objects.create(author=author, **validated_data)
         recipe.tags.set(tags)
-        self.set_ingredient_in_recipe_amount(ingredients=ingredients, recipe=recipe)
+        self.set_ingredient_in_recipe_amount(
+            ingredients=ingredients, recipe=recipe
+        )
         return recipe
 
     def update(self, instance: Recipe, validated_data):
@@ -172,7 +180,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
                 ).ingredient.pk
             else:
                 item['ingredient_id'] = item.get('id')
-        instance = super().update(instance=instance, validated_data=validated_data)
+        instance = super().update(
+            instance=instance, validated_data=validated_data
+        )
         instance.tags.clear()
         instance.tags.set(tags)
         instance.ingredients.clear()
@@ -220,7 +230,9 @@ class ChosenCreateAbstractSerializer(serializers.ModelSerializer):
         """Проверяет на наличие рецепта в подборке."""
 
         if self.Meta.model.objects.filter(**data).exists():
-            raise serializers.ValidationError('Рецепт уже добавлен в подборку.')
+            raise serializers.ValidationError(
+                'Рецепт уже добавлен в подборку.'
+            )
         return data
 
     class Meta:
@@ -295,7 +307,9 @@ class SubscriptionCreateSerializer(SubscriptionDeleteSerializer):
         if self.Meta.model.objects.filter(**data).exists():
             raise serializers.ValidationError('Подписка уже существует.')
         if data.get('user') == data.get('author'):
-            raise serializers.ValidationError('Подписка на самого себя запрещена.')
+            raise serializers.ValidationError(
+                'Подписка на самого себя запрещена.'
+            )
         return data
 
     class Meta(SubscriptionDeleteSerializer.Meta):
@@ -309,7 +323,9 @@ class UserWithRecipesSerializer(DjoserUserSerializer):
     который перадается через контекст.
     """
 
-    recipes_count = serializers.SerializerMethodField(method_name='get_recipes_count')
+    recipes_count = serializers.SerializerMethodField(
+        method_name='get_recipes_count'
+    )
     recipes = serializers.SerializerMethodField(method_name='get_recipes')
 
     def get_recipes(self, obj: User):
@@ -318,7 +334,9 @@ class UserWithRecipesSerializer(DjoserUserSerializer):
         recipes = obj.recipes.all()
         if recipes_limit:
             recipes = recipes[: int(recipes_limit)]
-        serializer = RecipeMinifiedSerializer(recipes, many=True, read_only=True)
+        serializer = RecipeMinifiedSerializer(
+            recipes, many=True, read_only=True
+        )
         return serializer.data
 
     def get_recipes_count(self, obj: User):

@@ -125,7 +125,9 @@ class RecipeViewSet(NotPutModelViewSet):
     def favorite(self, request, **kwargs):
         """Избранное добавить-удалить."""
 
-        return self.chosen_action(FavoriteCreateSerializer, FavoriteDeleteSerializer)
+        return self.chosen_action(
+            FavoriteCreateSerializer, FavoriteDeleteSerializer
+        )
 
     @action(
         detail=False,
@@ -173,7 +175,9 @@ class RecipeViewSet(NotPutModelViewSet):
         """Загрузить текстовый файл со списком покупок."""
 
         ingredient_in_cart = (
-            Ingredient.objects.filter(recipes__shopping_cart_recipes__user=request.user)
+            Ingredient.objects.filter(
+                recipes__shopping_cart_recipes__user=request.user
+            )
             .values('name', 'measurement_unit')
             .annotate(amount=Sum('recipe__amount'))
         )
@@ -214,12 +218,18 @@ class UserSubscriptionsViewSet(viewsets.GenericViewSet):
 
         return {'request': self.request}
 
-    @action(detail=False, methods=['POST', 'DELETE'], url_path=r'(?P<pk>\d+)/subscribe')
+    @action(
+        detail=False,
+        methods=['POST', 'DELETE'],
+        url_path=r'(?P<pk>\d+)/subscribe',
+    )
     def subscribe(self, request, **kwargs):
         """Подписка добавить-удалить."""
 
         if request.method == 'POST':
-            serializer = SubscriptionCreateSerializer(data=self.get_subscription_data())
+            serializer = SubscriptionCreateSerializer(
+                data=self.get_subscription_data()
+            )
 
             if serializer.is_valid(raise_exception=True):
                 subscription = serializer.save()
@@ -228,10 +238,13 @@ class UserSubscriptionsViewSet(viewsets.GenericViewSet):
                 )
 
                 return Response(
-                    data=subscription_serializer.data, status=status.HTTP_201_CREATED
+                    data=subscription_serializer.data,
+                    status=status.HTTP_201_CREATED,
                 )
 
-        serializer = SubscriptionDeleteSerializer(data=self.get_subscription_data())
+        serializer = SubscriptionDeleteSerializer(
+            data=self.get_subscription_data()
+        )
         serializer.is_valid(raise_exception=True)
         instance = serializer.instance
         instance.delete()

@@ -24,7 +24,9 @@ class RecipeFilter(FilterSet):
     author = NumberFilter(field_name='author', lookup_expr='exact')
 
     tags = ModelMultipleChoiceFilter(
-        field_name='tags__slug', to_field_name='slug', queryset=Tag.objects.all()
+        field_name='tags__slug',
+        to_field_name='slug',
+        queryset=Tag.objects.all(),
     )
     is_favorited = BooleanFilter(method='filter_is_favorited')
 

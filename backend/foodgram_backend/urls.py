@@ -11,5 +11,8 @@ urlpatterns = [
     path('api/users/', UserViewSet.as_view({'get': 'list', 'post': 'create'})),
     path('api/users/<int:id>/', UserViewSet.as_view({'get': 'retrieve'})),
     path('api/users/me/', UserViewSet.as_view({'get': 'me'})),
-    path('api/users/set_password/', UserViewSet.as_view({'post': 'set_password'})),
+    path(
+        'api/users/set_password/',
+        UserViewSet.as_view({'post': 'set_password'}),
+    ),
 ]

@@ -1,0 +1,4 @@
+IP: 158.160.66.88
+name_foodgram: https://choa.zapto.org/
+login: admin@fake.up
+password: admin728

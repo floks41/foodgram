@@ -72,7 +72,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
         user: User = self.context.get('request').user
         return (
-            not user.is_authenticated
+            user.is_authenticated
             and Favorite.objects.filter(user=user, recipe=obj).exists()
         )
 
@@ -81,7 +81,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
         user: User = self.context.get('request').user
         return (
-            not user.is_authenticated
+            user.is_authenticated
             and ShoppingCart.objects.filter(user=user, recipe=obj).exists()
         )
 
